@@ -4,14 +4,14 @@ from hmmlearn import hmm
 import os
 from joblib import dump
 
-os.environ["LOKY_MAX_CPU_COUNT"] = "4"  # Reemplaza "4" con el número de núcleos que deseas utilizar
+os.environ["LOKY_MAX_CPU_COUNT"] = "6"  # Reemplaza "4" con el número de núcleos que deseas utilizar
 # Definir las palabras que deseas reconocer
 palabras = ["arriba", "abajo", "izquierda", "derecha"]
 
 # Crear un modelo de HMM para cada palabra
 modelos = {}
 for palabra in palabras:
-	modelos[palabra] = hmm.GaussianHMM(n_components=5, covariance_type="diag", n_iter=1000)
+	modelos[palabra] = hmm.GaussianHMM(n_components=7, covariance_type="diag", n_iter=1000)
 
 # Para cada palabra, cargar las grabaciones de audio y extraer las características de MFCC
 for palabra in palabras:
@@ -26,7 +26,7 @@ for palabra in palabras:
 		audio, sr = librosa.load(os.path.join(carpeta, archivo))
 		
 		# Extraer las características de MFCC
-		mfcc_feat = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=13)
+		mfcc_feat = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=15)
 		
 		# Añadir las características a los datos de entrenamiento
 		datos_entrenamiento.append(mfcc_feat.T)
