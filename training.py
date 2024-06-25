@@ -13,7 +13,7 @@ palabras = ["abajo", "derecha", "izquierda", "rotar"]
 # Crear un modelo de HMM para cada palabra
 modelos = {}
 for palabra in palabras:
-    modelos[palabra] = hmm.GaussianHMM(n_components=5, covariance_type="diag", n_iter=1000)
+    modelos[palabra] = hmm.GaussianHMM(n_components=5, covariance_type="diag", n_iter=2000)
 
 def procesar_archivo(archivo):
     # Cargar la grabación de audio

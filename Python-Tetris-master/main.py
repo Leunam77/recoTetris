@@ -14,7 +14,7 @@ import os
 from joblib import load
 from queue import Queue
 
-os.environ["LOKY_MAX_CPU_COUNT"] = "4"  # Reemplaza "4" con el número de núcleos que quieres usar
+os.environ["LOKY_MAX_CPU_COUNT"] = "6"  # Reemplaza "4" con el número de núcleos que quieres usar
 
 PALABRAS = ["abajo", "derecha", "izquierda", "rotar"]
 FORMAT = pyaudio.paInt16
