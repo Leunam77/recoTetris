@@ -8,12 +8,12 @@ from multiprocessing import Pool
 
 os.environ["LOKY_MAX_CPU_COUNT"] = "4"  # Reemplaza "4" con el número de núcleos que deseas utilizar
 # Definir las palabras que deseas reconocer
-palabras = ["abajo", "derecha","izquierda","arriba"]
+palabras = ["abajo", "derecha", "izquierda", "arriba"]
 
 # Crear un modelo de HMM para cada palabra
 modelos = {}
 for palabra in palabras:
-	modelos[palabra] = hmm.GaussianHMM(n_components=5, covariance_type="diag", n_iter=1000)
+	modelos[palabra] = hmm.GaussianHMM(n_components=5)
 
 def procesar_archivo(archivo):
 	# Cargar la grabación de audio
@@ -25,9 +25,12 @@ def procesar_archivo(archivo):
 	return mfcc_feat.T
 
 if __name__ == "__main__":
-	# Para cada palabra, cargar las grabaciones de audio y extraer las características de MFCC
+	# Inicializar el StandardScaler
+	scaler = StandardScaler()
+	datos_entrenamiento_total = []
+
+	# Recopilar todos los datos de entrenamiento
 	for palabra in palabras:
-		# Asumimos que tienes una carpeta para cada palabra con grabaciones de audio en archivos .wav
 		carpeta = os.path.join("grabaciones", palabra)
 		if not os.path.exists(carpeta):
 			print(f"La carpeta {carpeta} no existe.")
@@ -37,12 +40,20 @@ if __name__ == "__main__":
 		
 		with Pool() as p:
 			datos_entrenamiento = p.map(procesar_archivo, archivos)
-		
-		# Normalizar los datos de entrenamiento
-		scaler = StandardScaler()
-		scaler.fit(np.vstack(datos_entrenamiento))
+			datos_entrenamiento_total.extend(datos_entrenamiento)
 
-		datos_entrenamiento = [scaler.transform(data) for data in datos_entrenamiento]
-		# Entrenar el modelo de HMM con los datos de entrenamiento
+	# Ajustar el StandardScaler con todos los datos de entrenamiento
+	scaler.fit(np.vstack(datos_entrenamiento_total))
+	dump(scaler, "scaler_general.joblib")
+
+	# Para cada palabra, transformar los datos y entrenar el modelo HMM
+	for palabra in palabras:
+		carpeta = os.path.join("grabaciones", palabra)
+		archivos = [os.path.join(carpeta, f) for f in os.listdir(carpeta) if f.endswith(".wav")]
+		
+		with Pool() as p:
+			datos_entrenamiento = p.map(procesar_archivo, archivos)
+		
+		#datos_entrenamiento = [scaler.transform(data) for data in datos_entrenamiento]
 		modelos[palabra].fit(np.vstack(datos_entrenamiento))
 		dump(modelos[palabra], palabra + "_modelo.joblib")
