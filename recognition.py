@@ -15,7 +15,7 @@ PALABRAS = ["abajo", "derecha", "izquierda", "rotar"]
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-CHUNK = RATE * 4
+CHUNK = RATE * 3
 WAVE_OUTPUT_FILENAME = "grabacion.wav"
 
 

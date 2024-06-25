@@ -6,7 +6,7 @@ from joblib import dump
 from sklearn.preprocessing import StandardScaler
 from multiprocessing import Pool
 
-os.environ["LOKY_MAX_CPU_COUNT"] = "6"  # Reemplaza "4" con el número de núcleos que deseas utilizar
+os.environ["LOKY_MAX_CPU_COUNT"] = "4"  # Reemplaza "4" con el número de núcleos que deseas utilizar
 # Definir las palabras que deseas reconocer
 palabras = ["abajo", "derecha", "izquierda", "rotar"]
 
