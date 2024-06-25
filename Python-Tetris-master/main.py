@@ -105,7 +105,7 @@ def reconocer():
     try:
         ultima_palabra_reconocida = None
         scaler = StandardScaler()
-        print("Habla, mierda")
+        print("Habla, por favor...")
         grabar_audio(stream)
         mfcc_feat = cargar_audio()
         mfcc_feat = scaler.fit_transform(mfcc_feat)
